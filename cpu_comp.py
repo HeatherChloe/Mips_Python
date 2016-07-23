@@ -6,10 +6,18 @@ rts = [0]
 ####################fore########################
 ####################fore########################
 ####################fore########################
+#def print_opt_list():
+    ##一行4个指令
+    ##每隔4个输出一个\n
+    #print(len(opt))
+    #for opt in opt_list:
+        
+        
+        
+        
+        
 def init_nd(nd):
-    
     nd = int(nd)
-    
     if nd < len(rts):
         return
     for i in range(0,nd):
@@ -76,15 +84,19 @@ class I():
         return imm16
     def ext(imm16):
         arr2 = []
+        
         for r in imm16:
+            #print(imm16)
             if r != '0':
-                r = bin(int(r,16)).replace("0b", "").zfill(4)
-                arr2.append(r)
-                strin = ""
-                strin = ''.join(arr2)
-        return strin
-    def ext_16_str(strin):
-        ext_16 = strin.zfill(16)
+                stri = bin(int(r,16)).replace("0b", "").zfill(4)
+                #print(r)
+                #arr2.append(r)
+                #strin = ""
+                #strin_fin = ""
+                #strin_fin = ''.join(arr2)
+        return r
+    def ext_16_str(stri):
+        ext_16 = stri.zfill(16)
         return ext_16
 
 class R():
@@ -160,7 +172,8 @@ for line in fp:
         count += 1      
     elif 'main' in line:
         if line.split(':')[0] == 'main':
-            stri = line[6:-1]
+            stri = line[5:-1]
+            stri = ' '.join(stri.split())
             L = stri.split(' ')
             string = L[1].split(',')
             l = []
@@ -172,8 +185,9 @@ for line in fp:
             l = []
             for line in fp.readlines()[count:]:
                 lin = str(line).lstrip()
-                lin = lin.replace('\n', '')
-                n = lin.split(' ')      
+                lin = lin.replace('\n', '')                
+                lin = ' '.join(lin.split())
+                n = lin.split(' ')
                 st = n[1].split(',')
                 l = st
                 l.insert(0, n[0])
@@ -195,8 +209,11 @@ for line in fp:
             rt          = ori(nt, ns, imm16)
             nt          = rmv(bin(int(nt))).zfill(5)
             ns          = rmv(bin(int(ns))).zfill(5)
-            #print("#32'b" + op + "_" + ns + "_" + nt + "_" + '_'.join(ext[i:i + 4] for i in range(0, len(ext),4)))
-            #print(rts)
+            print("#32'b" + op + "_" + ns + "_" + nt + "_" + '_'.join(ext[i:i + 4] for i in range(0, len(ext),4)))
+            print(rts)
+            print("--------------------------")
+
+
         if opt[0] == 'addiu':
             op          = '000000'
             ns          = R.get_ns()
@@ -212,7 +229,8 @@ for line in fp:
             print(l)
             print("#32'b" + op + "_" + str(ns).zfill(5) + "_" + str(nt).zfill(5) + "_" + '_'.join(ext[i:i+4] for i in range(0, len(ext),4)))
             print(rts)
-            
+            print("--------------------------")
+
             
         if opt[0] == 'add':
             op    = '00000'
@@ -230,7 +248,9 @@ for line in fp:
             print("#32'b" + op +'_'+ str(ns).zfill(5) + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5)+ '_' + shamt + '_' +func)
             print("after_add")
             print(rts)
-            
+            print("--------------------------")            
+
+
         if opt[0] == 'sub':
             op    = '00000'
             shamt = '00000'
@@ -245,7 +265,7 @@ for line in fp:
             nt    = rmv(bin(int(nt)))
             nd    = rmv(bin(int(nd)))
             print("#32'b" + op +'_'+ str(ns).zfill(5) + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5)+ '_' + shamt + '_' +func)
-
+            print("--------------------------")
 
 
         if opt[0] == 'subu':
@@ -262,9 +282,11 @@ for line in fp:
             nt    = rmv(bin(int(nt)))
             nd    = rmv(bin(int(nd)))
             print("#32'b" + op +'_'+ str(ns).zfill(5) + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5)+ '_' + shamt + '_' +func)
+            print("--------------------------")
 
-        if opt[0] == 'slt':
-        #if opt[0] == 'sltu':   
+
+        #if opt[0] == 'slt'
+        #if opt[0] == 'sltu'  
 print(pc_index)
 print(opt_list)
 
