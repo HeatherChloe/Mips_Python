@@ -6,15 +6,11 @@ rts = [0]
 ####################fore########################
 ####################fore########################
 ####################fore########################
-#def print_opt_list():
-    ##一行4个指令
-    ##每隔4个输出一个\n
-    #print(len(opt))
-    #for opt in opt_list:
-        
-        
-        
-        
+
+def print_opt_list():
+    for i in opt_list:
+        print('-------------'+ str(pc_index[opt_list.index(i)]) + '--------------')
+        print(i)  
         
 def init_nd(nd):
     nd = int(nd)
@@ -56,7 +52,7 @@ def add_to_d(nd, rd):
                 break
             rts.append(rd)
     return rts
-#鍘绘帀0b
+#0b
 def rmv(num):
     num = num.replace("0b", "")
     return num
@@ -73,10 +69,10 @@ class I():
         self.rt         = rt
         self.imm16      = imm16
 
-    def getnt():
+    def get_nd():
         nt = opt[1].replace("$", "").zfill(5)
         return nt
-    def getns():
+    def get_ns():
         ns = opt[2].replace("$", "").zfill(5)
         return ns    
     def getimm():
@@ -132,7 +128,7 @@ def ori(nt, rs, imm16):
 
 def addiu(nt, ns, imm16):
     imm16_n  = rmv(I.ext(imm16))
-    rd       = int(rts[ns]) + int(imm16_n)
+    rd       = int(rts[int(ns)]) + int(imm16_n,16)
     add_to_t(nt, rd)
     return rd
 
@@ -187,23 +183,36 @@ for line in fp:
                 lin = str(line).lstrip()
                 lin = lin.replace('\n', '')                
                 lin = ' '.join(lin.split())
-                n = lin.split(' ')
-                st = n[1].split(',')
-                l = st
-                l.insert(0, n[0])
-                add_to_index()
-                opt_list.append(l)
-                del l
-                l = []
+                #print(lin)
+                if not line.split():
+                    continue
+                elif lin[0] == '#':
+                    continue
+                else:
+                    n = lin.split(' ')
+                    st = n[1].split(',')
+                    l = st
+                    print(l)
+                    l.insert(0, n[0])
+                    print(l)
+                    
+                    add_to_index()
+                    opt_list.append(l)
+                    del l
+                    l = []
+                
+                #if lin.startswith('#')or not line.split():
+                    #continue
+
 
                 
     for opt in opt_list:
         print(opt)
         if opt[0]       == 'ori':
             op          = '001101'
-            ns          = I.getns()
+            ns          = I.get_ns()
             imm16       = I.getimm()
-            nt          = I.getnt()
+            nt          = I.get_nd()
             ext         = I.ext_16_str(I.ext(imm16))
             init_nd(nt)
             rt          = ori(nt, ns, imm16)
@@ -216,9 +225,9 @@ for line in fp:
 
         if opt[0] == 'addiu':
             op          = '000000'
-            ns          = R.get_ns()
-            rs          = rts[ns]
-            nt          = I.getnt()
+            ns          = I.get_ns()
+            rs          = int(rts[int(ns)])
+            nt          = I.get_nd()
             imm16       = I.getimm()
             rt          = addiu(nt, ns, imm16)
             #ext         = I.ext_16_str(rmv(I.ext_16_str(I.ext(imm16))))
@@ -226,7 +235,7 @@ for line in fp:
             init_nd(nt)
             nt          = rmv(bin(int(nt)))
             ns          = rmv(bin(int(ns)))
-            print(l)
+            #print(l)
             print("#32'b" + op + "_" + str(ns).zfill(5) + "_" + str(nt).zfill(5) + "_" + '_'.join(ext[i:i+4] for i in range(0, len(ext),4)))
             print(rts)
             print("--------------------------")
@@ -260,11 +269,12 @@ for line in fp:
             nd    = R.get_nd()
             rd    = sub(nd, ns, nt)
             init_nd(nd)
-            print(l)
+            #print(l)
             ns    = rmv(bin(int(ns)))
             nt    = rmv(bin(int(nt)))
             nd    = rmv(bin(int(nd)))
             print("#32'b" + op +'_'+ str(ns).zfill(5) + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5)+ '_' + shamt + '_' +func)
+            print(rts)
             print("--------------------------")
 
 
@@ -277,18 +287,22 @@ for line in fp:
             nd    = R.get_nd()
             rd    = subu(nd, ns, nt)
             init_nd(nd)
-            print(l)
+            #print(l)
             ns    = rmv(bin(int(ns)))
             nt    = rmv(bin(int(nt)))
             nd    = rmv(bin(int(nd)))
             print("#32'b" + op +'_'+ str(ns).zfill(5) + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5)+ '_' + shamt + '_' +func)
+            print(rts)
             print("--------------------------")
+
+            
+            
 
 
         #if opt[0] == 'slt'
         #if opt[0] == 'sltu'  
-print(pc_index)
-print(opt_list)
+#print(pc_index)
+print_opt_list()
 
 
 
