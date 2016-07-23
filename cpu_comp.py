@@ -84,10 +84,15 @@ class I():
         return imm16
     def ext(imm16):
         arr2 = []
+<<<<<<< HEAD
         
+=======
+        strin_fin = ""
+>>>>>>> origin/master
         for r in imm16:
             #print(imm16)
             if r != '0':
+<<<<<<< HEAD
                 stri = bin(int(r,16)).replace("0b", "").zfill(4)
                 #print(r)
                 #arr2.append(r)
@@ -95,6 +100,14 @@ class I():
                 #strin_fin = ""
                 #strin_fin = ''.join(arr2)
         return r
+=======
+                r = bin(int(r,16)).replace("0b", "").zfill(4)
+                arr2.append(r)
+                #strin = ""
+                strin_fin = ""
+                strin_fin = ''.join(arr2)
+        return strin_fin
+>>>>>>> origin/master
     def ext_16_str(stri):
         ext_16 = stri.zfill(16)
         return ext_16
