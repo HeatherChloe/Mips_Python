@@ -1,11 +1,27 @@
 print("begin")
+import shutil 
+import os.path
+import sys
+src_name = "file_in.txt"
+file_in_path = os.path.abspath(src_name)
+print(file_in_path)
+
+path = sys.path[0]  #当前工作目录
+folder_name = 'edited_version'
+os.mkdir(os.path.join(path, folder_name))
+
 fp = open('file_in.txt','r')
 opt_list = []
 pc_index = []
 rts = [0]
+#mem = {}
 ####################fore########################
 ####################fore########################
 ####################fore########################
+
+def to_unsigned(num):
+    unsigned_num = num & 0xffffffff
+    return unsigned_num
 
 def print_opt_list():
     for i in opt_list:
@@ -52,6 +68,11 @@ def add_to_d(nd, rd):
                 break
             rts.append(rd)
     return rts
+
+def add_to_mem(nd, rd):
+    mem[nd] = rd
+    return mem
+     
 #0b
 def rmv(num):
     num = num.replace("0b", "")
@@ -79,7 +100,9 @@ class I():
         imm16 = opt[3].replace("0x", "")
         return imm16
     def ext(imm16):
-        arr2 = []
+        imm16 = int(imm16,16)
+        imm16 = bin(imm16).replace('b','')
+        return imm16
         
         for r in imm16:
             #print(imm16)
@@ -103,6 +126,7 @@ class R():
         self.rs         = rs
         self.rt         = rt
         self.rd         = rd
+        self.shamt      = shamt
     def get_ns():
         ns = int(opt[2].replace("$", "").zfill(5))
         return ns
@@ -112,7 +136,11 @@ class R():
     def get_nt():
         nt = int(opt[3].replace("$", "").zfill(5))
         return nt
-
+    def get_shamt():
+        shamt = int()
+class J():
+    def __init__(self, target):
+        self.target = target
 
 ####################func########################
 ####################func########################
@@ -120,7 +148,6 @@ class R():
         #for i in opt_list: read(i)
 def ori(nt, rs, imm16):
     imm16_n = I.ext(imm16)
-    #print("rs:"+rs)
     a = rmv(imm16_n)
     rd = "%05d" % (int(rs)|int(a))
     add_to_t(nt, rd)
@@ -136,19 +163,22 @@ def add(nd, ns, nt):
     rd = int(rts[ns]) + int(rts[nt])
     add_to_t(nd, rd)
     return rd
+
 def addu(nd, ns, nt):
     rd = int(rts[ns]) + int(rts[nt])
     add_to_t(nd, rd)
     return rd
+
 def sub(nd, ns, nt):
     rd = int(rts[ns]) - int(rts[nt])
     add_to_t(nd, rd)
     return rd
+
 def subu(nd, ns, nt):
     rd = int(rts[ns]) - int(rts[nt])
     add_to_t(nd, rd)
     return rd
-#小于置一 rd = ns-nt 小于0 rd置1
+
 def slt(nd, ns, nt):
     tmp = int(rts[ns]) - int(rts[nt])
     if tmp < 0:
@@ -157,6 +187,14 @@ def slt(nd, ns, nt):
         rd = 0
     add_to_t(nd, rd)
     return rd
+
+#设置一个mem
+#def sw(nt, ns, imm16):
+#    mem[rts[ns]+imm16] = rts[nt]
+#def lw(nt, ns, imm16):
+#    rts[nt] = mem[rts[ns]+imm16]
+#def j(target):
+#    
 ####################main########################
 ####################main########################
 ####################main########################
@@ -183,18 +221,21 @@ for line in fp:
                 lin = str(line).lstrip()
                 lin = lin.replace('\n', '')                
                 lin = ' '.join(lin.split())
-                #print(lin)
+
+                
                 if not line.split():
                     continue
                 elif lin[0] == '#':
                     continue
+
+                
                 else:
                     n = lin.split(' ')
                     st = n[1].split(',')
                     l = st
-                    print(l)
+                    #print(l)
                     l.insert(0, n[0])
-                    print(l)
+                    #print(l)
                     
                     add_to_index()
                     opt_list.append(l)
@@ -300,7 +341,21 @@ for line in fp:
 
 
         #if opt[0] == 'slt'
-        #if opt[0] == 'sltu'  
+        #if opt[0] == 'sltu'
+        if opt[0] == 'sw':
+            op = '101011'
+            ns = I.get_ns()
+            nt = I.get_nt()
+            imm16       = I.getimm()
+            #rt          = addiu(nt, ns, imm16)
+            ext         = I.ext_16_str(I.ext(imm16))
+            #init_nd(nt)
+            nt          = rmv(bin(int(nt)))
+            ns          = rmv(bin(int(ns)))
+            #print(l)
+            print("#32'b" + op + "_" + str(ns).zfill(5) + "_" + str(nt).zfill(5) + "_" + '_'.join(ext[i:i+4] for i in range(0, len(ext),4)))
+            print(rts)
+            print("--------------------------")
 #print(pc_index)
 print_opt_list()
 
