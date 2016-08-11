@@ -3,14 +3,44 @@ import shutil
 import os.path
 import sys
 src_name = "file_in.txt"
+
+import os.path
+import sys
+import shutil
+##############################################################
+##################do sth with file############################
+##############################################################
+src_name = "file_in.txt"
 file_in_path = os.path.abspath(src_name)
-print(file_in_path)
-
-path = sys.path[0]  #当前工作目录
+#print(file_in_path)
+path = sys.path[0]
+#print(path)
 folder_name = 'edited_version'
-os.mkdir(os.path.join(path, folder_name))
 
-fp = open('file_in.txt','r')
+no_name = path + folder_name
+if os.path.exists(no_name) == False:
+    os.mkdir(os.path.join(path, folder_name))
+    
+new_path = path + '\edited_version'
+#print(new_path)
+shutil.copy(file_in_path, new_path)
+
+#判断是否存在源文件 存在就删
+to_be_deleted_file = new_path + '\\' + src_name+ '.tmp'
+#print(to_be_deleted_file)
+
+if os.path.exists(to_be_deleted_file):
+    os.remove(to_be_deleted_file)
+else:
+    fore_name = new_path + '\\' + src_name
+    now_name = to_be_deleted_file
+    os.rename(fore_name, now_name)
+##############################################################
+##################do sth with file############################
+##############################################################
+
+
+fp = open(now_name,'r')
 opt_list = []
 pc_index = []
 rts = [0]
