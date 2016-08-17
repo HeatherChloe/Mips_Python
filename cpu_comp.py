@@ -22,23 +22,23 @@ folder_name = 'edited_version'
 no_name = path + '\\' + folder_name
 if os.path.exists(no_name) == False:
     os.mkdir(os.path.join(path, folder_name))
-    
+
 new_path = path + '\\edited_version'
 print(new_path)
 shutil.copy(file_in_path, new_path)
 
 #判断是否存在.tmp 存在就删
-to_be_deleted_file = (new_path + '\\' + src_name+ '.tmp')
+with_tmp_file = (new_path + '\\' + src_name+ '.tmp')
 
-if os.path.exists(to_be_deleted_file) == True:
-    os.remove(to_be_deleted_file)
+if os.path.exists(with_tmp_file) == True:
+    os.remove(with_tmp_file)
 
 fore_name = new_path + '\\' + src_name
-now_name = to_be_deleted_file
+now_name = with_tmp_file
 os.rename(fore_name, now_name)
 
 ##############################################################
-##################do sth with file############################
+#################done sth with file###########################
 ##############################################################
 
 
@@ -48,12 +48,12 @@ while temp >0 :
     try:
         fp = open(now_name,'r+')
     except:
-        temp -= 1 
+        temp -= 1
     finally:
         break
 if fp == None:
     sys.exit(0)
-    
+
 opt_list = []
 pc_index = []
 reg = [0]
@@ -72,8 +72,8 @@ def unsigned(num):
 def print_opt_list():
     for i in opt_list:
         print('-------------'+ str(pc_index[opt_list.index(i)]) + '--------------')
-        print(i)  
-        
+        print(i)
+
 def init_nd(nd):
     nd = int(nd)
     if nd < len(reg):
@@ -118,7 +118,7 @@ def add_to_d(nd, rd):
 def add_to_mem(nd, rd):
     mem[nd] = rd
     return mem
-     
+
 #0b
 def rmv(num):
     num = num.replace("0b", "")
@@ -141,7 +141,7 @@ class I():
         return nt
     def get_ns():
         ns = opt[2].replace("$", "").zfill(5)
-        return ns    
+        return ns
     def getimm():
         imm16 = opt[3].replace("0x", "")
         return imm16
@@ -203,14 +203,36 @@ def ori(nt, rs, imm16):
 
 def addiu(nt, ns, imm16):
     imm16_n  = rmv(I.ext(imm16))
-    rd       = int(reg[int(ns)]) + int(imm16_n,16)
+    rd       = int(reg[int(ns)]) + int(imm16_n)
     add_to_reg(nt, rd)
     return rd
 
 def sw(nt, ns, imm16):
-    return rt
+    nt = int(nt)
+    ns = int(ns)
+    imm16_n = int(rmv(I.ext(imm16)))
+    
+    mem_key = int(int(reg[ns]) + imm16_n)
+    print(mem_key)
+    mem_val = int(reg[nt])
+    mem[mem_key] = mem_val
+    
+    print(mem)
+    return mem_val
+
 #    mem[reg[ns]+imm16] = reg[nt]
-#def lw(nt, ns, imm16):
+
+##def lw(nt, ns, imm16):
+##    nt = int(nt)
+##    ns = int(ns)
+##    imm16_n = int(rmv(I.ext(imm16)))
+##    print(imm16_n)
+##    print(int(reg[ns]))
+##    print(int(reg[ns]) + imm16_n)
+##    rt = mem[int(reg[ns]) + imm16_n]
+##    add_to_reg(nt, rt)
+##    return rt
+
 #    reg[nt] = mem[reg[ns]+imm16]
 #def beq:
 ####################TYPE########################
@@ -262,15 +284,19 @@ def srl(nd, nt, shamt):
     rd = rmv(bin(reg[nt] >> shamt)).zfill(32)
     add_to_reg(rd)
     return rd
-def sra(nd , nt, shamt):
-    shamt = int(shamt)
-    rd = bin(reg[nt] >> shamt)
-    if bin(reg[nt])[0] == 1:
-        rd = rd.rjust(32, [ 1])
-    else:
-        rd = rd.zfill(32)
-    add_to_reg(rd)
-    return rd
+
+##def sra(nd , nt, shamt):
+##    shamt = int(shamt)
+##    nt = int(nt)
+##    print(nt)
+##    print(reg[rt])
+##    rd = bin(reg[nt] >> shamt)
+##    if bin(reg[nt])[0] == 1:
+##        rd = rd.rjust(32, [1])
+##    else:
+##        rd = rd.zfill(32)
+##    add_to_reg(rd)
+##    return rd
 
 #rt左移shamt的位数 存在rd里
 
@@ -288,9 +314,9 @@ def sra(nd , nt, shamt):
 for line in fp:
     L = []
     n = []
-    count = 0   
+    count = 0
     if 'main' not in line:
-        count += 1      
+        count += 1
     elif 'main' in line:
         if line.split(':')[0] == 'main':
             stri = line[5:-1]
@@ -301,21 +327,21 @@ for line in fp:
             l = string
             l.insert(0,L[0])
             add_to_index()
-            opt_list.append(l)       
+            opt_list.append(l)
             del l
             l = []
             for line in fp.readlines()[count:]:
                 lin = str(line).lstrip()
-                lin = lin.replace('\n', '')                
+                lin = lin.replace('\n', '')
                 lin = ' '.join(lin.split())
 
-                
+
                 if not line.split():
                     continue
                 elif lin[0] == '#':
                     continue
 
-                
+
                 else:
                     n = lin.split(' ')
                     st = n[1].split(',')
@@ -323,17 +349,17 @@ for line in fp:
                     #print(l)
                     l.insert(0, n[0])
                     #print(l)
-                    
+
                     add_to_index()
                     opt_list.append(l)
                     del l
                     l = []
-                
+
                 #if lin.staregwith('#')or not line.split():
                     #continue
 
 
-                
+
     for opt in opt_list:
         print(opt)
         if opt[0]       == 'ori':
@@ -368,7 +394,7 @@ for line in fp:
             print(reg)
             print("--------------------------")
 
-            
+
         if opt[0] == 'add':
             op    = '00000'
             func  = '100000'
@@ -385,7 +411,7 @@ for line in fp:
             print("#32'b" + op +'_'+ str(ns).zfill(5) + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5)+ '_' + shamt + '_' +func)
 ##            print("after_add")
             print(reg)
-            print("--------------------------")            
+            print("--------------------------")
 
 
         if opt[0] == 'sub':
@@ -422,7 +448,7 @@ for line in fp:
             print("#32'b" + op +'_'+ str(ns).zfill(5) + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5)+ '_' + shamt + '_' +func)
             print(reg)
             print("--------------------------")
-  
+
 
         if opt[0] == 'slt':
             op    = '000000'
@@ -439,7 +465,7 @@ for line in fp:
             print(reg)
             print("--------------------------")
 
-            
+
         if opt[0] == 'sltu':
             op    = '000000'
             shamt = '00000'
@@ -455,27 +481,28 @@ for line in fp:
             print(reg)
             print("--------------------------")
 
-            
+
         if opt[0] == 'sw':
             op = '101011'
             ns = I.get_ns()
             nt = I.get_nt()
             imm16       = I.getimm()
-            #rt          = sw(nt, ns, imm16)
+            rt          = sw(nt, ns, imm16)
             ext         = I.ext_16_str(I.ext(imm16))
             #init_nd(nt)
             nt          = rmv(bin(int(nt)))
             ns          = rmv(bin(int(ns)))
-            #print(l)
             print("#32'b" + op + "_" + str(ns).zfill(5) + "_" + str(nt).zfill(5) + "_" + '_'.join(ext[i:i+4] for i in range(0, len(ext),4)))
             print(reg)
             print("--------------------------")
+
+            
         if opt[0] == 'lw':
             op = '100011'
             ns = I.get_ns()
             nt = I.get_nt()
             imm16       = I.getimm()
-            #rt          = lw(nt, ns, imm16)
+            rt          = lw(nt, ns, imm16)
             ext         = I.ext_16_str(I.ext(imm16))
             #init_nd(nt)
             nt          = rmv(bin(int(nt)))
@@ -484,17 +511,18 @@ for line in fp:
             print("#32'b" + op + "_" + str(ns).zfill(5) + "_" + str(nt).zfill(5) + "_" + '_'.join(ext[i:i+4] for i in range(0, len(ext),4)))
             print(reg)
             print("--------------------------")
-        if opt[0] == 'sra':
-            op = '000000'
-            rs = '00111'
-            nd = R.get_nd()
-            nt = R.get_ns()
-            shamt = R.get_shamt()
-            func = '101100'
-            rd = sra(nd, nt, shamt)
-            print("#32'b" + op +'_'+ rs + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5)+ '_' + shamt + '_' +func)
+##        if opt[0] == 'sra':
+##            op = '000000'
+##            rs = '00111'
+##            nd = R.get_nd()
+##            nt = R.get_ns()
+##            shamt = R.get_shamt()
+##            func = '101100'
+##            rd = sra(nd, nt, shamt)
+##            print("#32'b" + op +'_'+ rs + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5)+ '_' + shamt + '_' +func)
 
-print_opt_list()
+##print_opt_list()
+print(mem)
 fp.close()
 
 

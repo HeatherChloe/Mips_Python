@@ -42,9 +42,12 @@
 ##second = 4*4
 ##dict[first] = second
 ##print(dict)
-shamt = 2
-num = 100
-num = bin(num>>shamt)
-num = num.replace('0b', '').zfill(32)
-print(num)
+
+
+
+##shamt = 2
+##num = 100
+##num = bin(num>>shamt)
+##num = num.replace('0b', '').zfill(32)
+##print(num)
 
