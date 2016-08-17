@@ -1,9 +1,9 @@
-##def to_unsigned(num):
+##def unsigned(num):
 ##    unsigned_num = num & 0xffffffff
-##        return unsigned_num
+##    return unsigned_num
 
 
-##NUM = to_unsigned(-1)
+##NUM = unsigned(-1)
 ##print(NUM)
 
 
@@ -36,3 +36,15 @@
 ##    fore_name = new_path + '\\' + src_name
 ##    now_name = to_be_deleted_file
 ##    os.rename(fore_name, now_name)
+
+##dict = {}
+##first = 3*3
+##second = 4*4
+##dict[first] = second
+##print(dict)
+shamt = 2
+num = 100
+num = bin(num>>shamt)
+num = num.replace('0b', '').zfill(32)
+print(num)
+
