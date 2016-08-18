@@ -210,11 +210,16 @@ def addiu(nt, ns, imm16):
 def sw(nt, ns, imm16):
     nt = int(nt)
     ns = int(ns)
-    imm16_n = int(rmv(I.ext(imm16)))
+    imm16_n = int(rmv(I.ext(imm16)),2)
+    reg[ns] = int(str(reg[ns]), 2)
+##    print(imm16_n)
+##    print(ns)
+##    print(reg[ns])
     
     mem_key = int(int(reg[ns]) + imm16_n)
-    print(mem_key)
+##    print(mem_key)
     mem_val = int(reg[nt])
+
     mem[mem_key] = mem_val
     
     print(mem)
@@ -222,16 +227,19 @@ def sw(nt, ns, imm16):
 
 #    mem[reg[ns]+imm16] = reg[nt]
 
-##def lw(nt, ns, imm16):
-##    nt = int(nt)
-##    ns = int(ns)
+def lw(nt, ns, imm16):
+    nt = int(nt)
+    ns = int(ns)
+    imm16_n  = int(rmv(I.ext(imm16)),2)
+##    print(type(imm16_n))
+##    print(str(imm16_n))
 ##    imm16_n = int(rmv(I.ext(imm16)))
-##    print(imm16_n)
+##    print("imm16_n:" + str(imm16_n))
 ##    print(int(reg[ns]))
 ##    print(int(reg[ns]) + imm16_n)
-##    rt = mem[int(reg[ns]) + imm16_n]
-##    add_to_reg(nt, rt)
-##    return rt
+    rt = mem[int(reg[ns]) + imm16_n]
+    add_to_reg(nt, rt)
+    return rt
 
 #    reg[nt] = mem[reg[ns]+imm16]
 #def beq:
@@ -276,27 +284,33 @@ def sltu(nd, ns, nt):
     return rd
 
 def sll(nd, nt, shamt):
+    shamt = int(shamt)
     rd = rmv(bin(reg[nt] << shamt)).zfill(32)
-    add_to_reg(rd)
+    add_to_reg(nd, rd)
     return rd
 
 def srl(nd, nt, shamt):
+    shamt = int(shamt)
+    reg[nt] = int(reg[nt])
     rd = rmv(bin(reg[nt] >> shamt)).zfill(32)
-    add_to_reg(rd)
+    add_to_reg(nd, rd)
     return rd
 
-##def sra(nd , nt, shamt):
-##    shamt = int(shamt)
-##    nt = int(nt)
+def sra(nd , nt, shamt):
+    shamt = int(shamt)
+    nt = int(nt)
+    reg[nt] = int(rmv(reg[nt]))
 ##    print(nt)
-##    print(reg[rt])
-##    rd = bin(reg[nt] >> shamt)
-##    if bin(reg[nt])[0] == 1:
-##        rd = rd.rjust(32, [1])
-##    else:
-##        rd = rd.zfill(32)
-##    add_to_reg(rd)
-##    return rd
+##    print(reg[nt])
+    rd = bin(reg[nt] >> shamt)
+    if bin(reg[nt])[0] == 1:
+        rd = rd.rjust(32, [1])
+    else:
+        rd = rd.zfill(32)
+    add_to_reg(nd, rd)
+    return rd
+##def beq(nt, ns, imm16):
+    
 
 #rt左移shamt的位数 存在rd里
 
@@ -511,15 +525,39 @@ for line in fp:
             print("#32'b" + op + "_" + str(ns).zfill(5) + "_" + str(nt).zfill(5) + "_" + '_'.join(ext[i:i+4] for i in range(0, len(ext),4)))
             print(reg)
             print("--------------------------")
-##        if opt[0] == 'sra':
-##            op = '000000'
-##            rs = '00111'
-##            nd = R.get_nd()
-##            nt = R.get_ns()
-##            shamt = R.get_shamt()
-##            func = '101100'
-##            rd = sra(nd, nt, shamt)
-##            print("#32'b" + op +'_'+ rs + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5)+ '_' + shamt + '_' +func)
+
+
+        if opt[0] == 'sll':
+            op = '000000'
+            rs = '00111'
+            nd = R.get_nd()
+            nt = R.get_ns()
+            shamt = R.get_shamt()
+            func = '110000'
+            rd = sra(nd, nt, shamt)
+            print("#32'b" + op +'_'+ rs + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5)+ '_' + str(shamt) + '_' +func)
+
+
+        if opt[0] == 'srl':
+            op = '000000'
+            rs = '00111'
+            nd = R.get_nd()
+            nt = R.get_ns()
+            shamt = R.get_shamt()
+            func = '100001'
+            rd = sra(nd, nt, shamt)
+            print("#32'b" + op +'_'+ rs + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5)+ '_' + str(shamt) + '_' +func)
+
+        
+        if opt[0] == 'sra':
+            op = '000000'
+            rs = '00111'
+            nd = R.get_nd()
+            nt = R.get_ns()
+            shamt = R.get_shamt()
+            func = '101100'
+            rd = sra(nd, nt, shamt)
+            print("#32'b" + op +'_'+ rs + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5)+ '_' + str(shamt) + '_' +func)
 
 ##print_opt_list()
 print(mem)
