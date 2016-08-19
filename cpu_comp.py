@@ -65,6 +65,24 @@ mem = {}
 #"mmmmm"
 #"lllll"
 #"11111"
+
+##def read_shift_in(opt):
+##    print(opt)
+##    opt_l = []
+##    for each in opt.split(' '):
+##        opt_l.append(each)
+##    print(opt_l)
+##    if 'shift' in opt[0]:
+##        tmp = opt[0].split(':')
+##        del opt[0]
+##        print(tmp)
+##        print(opt)
+##        opt = tmp + opt
+##        print(opt)
+##        shift_list.appennd(opt)
+##        return opt
+        
+
 def unsigned(num):
     unsigned_num = num & 0xffffffff
     return unsigned_num
@@ -374,6 +392,7 @@ for line in fp:
 
 
 
+
     for opt in opt_list:
         print(opt)
         if opt[0]       == 'ori':
@@ -408,6 +427,16 @@ for line in fp:
             print(reg)
             print("--------------------------")
 
+##        if opt[0] == 'beq':
+##            op = '000010'
+##            ns          = I.get_ns()
+##            nt          = I.get_nt()
+##            rs          = int(reg[int(ns)])
+##            rt          = int(reg[int(nt)])
+##            if rt == rs:
+##                if opt[3] == 'shift':
+##                  go_to_shift()            
+            
 
         if opt[0] == 'add':
             op    = '00000'
@@ -535,8 +564,12 @@ for line in fp:
             shamt = R.get_shamt()
             func = '110000'
             rd = sra(nd, nt, shamt)
+            nd          = rmv(bin(int(nd)))
+            nt          = rmv(bin(int(nt)))
+            shamt       = rmv(bin(shamt).zfill(5))
             print("#32'b" + op +'_'+ rs + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5)+ '_' + str(shamt) + '_' +func)
-
+            print(reg)
+            print("--------------------------")
 
         if opt[0] == 'srl':
             op = '000000'
@@ -546,8 +579,12 @@ for line in fp:
             shamt = R.get_shamt()
             func = '100001'
             rd = sra(nd, nt, shamt)
+            nd          = rmv(bin(int(nd)))
+            nt          = rmv(bin(int(nt)))
+            shamt       = rmv(bin(shamt).zfill(5))
             print("#32'b" + op +'_'+ rs + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5)+ '_' + str(shamt) + '_' +func)
-
+            print(reg)
+            print("--------------------------")
         
         if opt[0] == 'sra':
             op = '000000'
@@ -557,10 +594,19 @@ for line in fp:
             shamt = R.get_shamt()
             func = '101100'
             rd = sra(nd, nt, shamt)
+            nd          = rmv(bin(int(nd)))
+            nt          = rmv(bin(int(nt)))
+            shamt       = rmv(bin(shamt).zfill(5))
             print("#32'b" + op +'_'+ rs + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5)+ '_' + str(shamt) + '_' +func)
+            print(reg)
+            print("--------------------------")
 
-##print_opt_list()
+
+             
+             
+print_opt_list()
 print(mem)
+print(opt_list_aye)
 fp.close()
 
 
