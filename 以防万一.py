@@ -155,7 +155,7 @@ class I():
     def get_nt():
         nt = opt[1].replace("$", "").zfill(5)
         return nt
-    def get_ns():
+    def get_ns(opt):
         ns = opt[2].replace("$", "").zfill(5)
         return ns
     def getimm():
@@ -188,7 +188,7 @@ class R():
         self.rt         = rt
         self.rd         = rd
         self.shamt      = shamt
-    def get_ns():
+    def get_ns(opt):
         ns = int(opt[2].replace("$", "").zfill(5))
         return ns
     def get_nd():
@@ -333,64 +333,7 @@ def sra(nd , nt, shamt):
 
 ####################TYPE########################
 #####################J##########################
-
-
-#def j(target):
-#
-
-####################main########################
-####################main########################
-####################main########################
-for line in fp:
-    L = []
-    n = []
-    count = 0
-    if 'main' not in line:
-        count += 1
-    elif 'main' in line:
-        if line.split(':')[0] == 'main':
-            stri = line[5:-1]
-            stri = ' '.join(stri.split())
-            L = stri.split(' ')
-            string = L[1].split(',')
-            l = []
-            l = string
-            l.insert(0,L[0])
-            add_to_index()
-            opt_list.append(l)
-            del l
-            l = []
-            for line in fp.readlines()[count:]:
-                lin = str(line).lstrip()
-                lin = lin.replace('\n', '')
-                lin = ' '.join(lin.split())
-
-
-                if not line.split():
-                    continue
-                elif lin[0] == '#':
-                    continue
-
-
-                else:
-                    n = lin.split(' ')
-                    st = n[1].split(',')
-                    l = st
-                    #print(l)
-                    l.insert(0, n[0])
-                    #print(l)
-
-                    add_to_index()
-                    opt_list.append(l)
-                    del l
-                    l = []
-
-                #if lin.staregwith('#')or not line.split():
-                    #continue
-
-
-
-    
+def exits_shift_line(opt_list):   
     for opt in opt_list:
         if 'shift:' in opt[0]:
             shift_line= opt_list.index(opt)
@@ -404,11 +347,72 @@ for line in fp:
             shift_list_aye = shift_list_aye[0]
             for i in opt_list[shift_line_before:]:
                 opt_list.remove(i)
-        
-        print(opt)
+
+#def j(target):
+#
+##def deal_with_list(opt_list):
+##    for opt in opt_list:
+##        print(opt)
+##        deal_with_list(opt_list)
+##        if 'shift' in opt:
+##            deal_with_list(shift_list)
+            
+
+   
+####################main########################
+####################main########################
+####################main########################
+if __name__ == '__main__':
+    for line in fp:
+        L = []
+        n = []
+        count = 0
+        if 'main' not in line:
+            count += 1
+        elif 'main' in line:
+            if line.split(':')[0] == 'main':
+                stri = line[5:-1]
+                stri = ' '.join(stri.split())
+                L = stri.split(' ')
+                string = L[1].split(',')
+                l = []
+                l = string
+                l.insert(0,L[0])
+                add_to_index()
+                opt_list.append(l)
+                del l
+                l = []
+                for line in fp.readlines()[count:]:
+                    lin = str(line).lstrip()
+                    lin = lin.replace('\n', '')
+                    lin = ' '.join(lin.split())
+
+
+                    if not line.split():
+                        continue
+                    elif lin[0] == '#':
+                        continue
+
+
+                    else:
+                        n = lin.split(' ')
+                        st = n[1].split(',')
+                        l = st
+                        #print(l)
+                        l.insert(0, n[0])
+                        #print(l)
+
+                        add_to_index()
+                        opt_list.append(l)
+                        del l
+                        l = []
+
+                #if lin.staregwith('#')or not line.split():
+                    #continue
+
         if opt[0]       == 'ori':
             op          = '001101'
-            ns          = I.get_ns()
+            ns          = I.get_ns(opt)
             imm16       = I.getimm()
             nt          = I.get_nt()
             ext         = I.ext_16_str(I.ext(imm16))
@@ -423,7 +427,7 @@ for line in fp:
 
         if opt[0] == 'addiu':
             op          = '000000'
-            ns          = I.get_ns()
+            ns          = I.get_ns(opt)
             rs          = int(reg[int(ns)])
             nt          = I.get_nt()
             imm16       = I.getimm()
@@ -440,7 +444,7 @@ for line in fp:
 
 ##        if opt[0] == 'beq':
 ##            op = '000010'
-##            ns          = I.get_ns()
+##            ns          = I.get_ns(opt)
 ##            nt          = I.get_nt()
 ##            rs          = int(reg[int(ns)])
 ##            rt          = int(reg[int(nt)])
@@ -453,7 +457,7 @@ for line in fp:
             op    = '00000'
             func  = '100000'
             shamt = '00000'
-            ns    = R.get_ns()
+            ns    = R.get_ns(opt)
             nt    = R.get_nt()
             nd    = R.get_nd()
             rd    = add(nd, ns, nt)
@@ -472,7 +476,7 @@ for line in fp:
             op    = '00000'
             shamt = '00000'
             func  = '100010'
-            ns    = R.get_ns()
+            ns    = R.get_ns(opt)
             nt    = R.get_nt()
             nd    = R.get_nd()
             rd    = sub(nd, ns, nt)
@@ -490,7 +494,7 @@ for line in fp:
             op    = '000000'
             shamt = '00000'
             func  = '100010'
-            ns    = R.get_ns()
+            ns    = R.get_ns(opt)
             nt    = R.get_nt()
             nd    = R.get_nd()
             rd    = subu(nd, ns, nt)
@@ -507,7 +511,7 @@ for line in fp:
         if opt[0] == 'slt':
             op    = '000000'
             shamt = '00000'
-            ns    = R.get_ns()
+            ns    = R.get_ns(opt)
             nt    = R.get_nt()
             nd    = R.get_nd()
             rd = slt(nd, ns, nt)
@@ -523,7 +527,7 @@ for line in fp:
         if opt[0] == 'sltu':
             op    = '000000'
             shamt = '00000'
-            ns    = R.get_ns()
+            ns    = R.get_ns(opt)
             nt    = R.get_nt()
             nd    = R.get_nd()
             rd = slt(nd, ns, nt)
@@ -538,7 +542,7 @@ for line in fp:
 
         if opt[0] == 'sw':
             op = '101011'
-            ns = I.get_ns()
+            ns = I.get_ns(opt)
             nt = I.get_nt()
             imm16       = I.getimm()
             rt          = sw(nt, ns, imm16)
@@ -553,7 +557,7 @@ for line in fp:
             
         if opt[0] == 'lw':
             op = '100011'
-            ns = I.get_ns()
+            ns = I.get_ns(opt)
             nt = I.get_nt()
             imm16       = I.getimm()
             rt          = lw(nt, ns, imm16)
@@ -571,7 +575,7 @@ for line in fp:
             op = '000000'
             rs = '00111'
             nd = R.get_nd()
-            nt = R.get_ns()
+            nt = R.get_ns(opt)
             shamt = R.get_shamt()
             func = '110000'
             rd = sra(nd, nt, shamt)
@@ -586,7 +590,7 @@ for line in fp:
             op = '000000'
             rs = '00111'
             nd = R.get_nd()
-            nt = R.get_ns()
+            nt = R.get_ns(opt)
             shamt = R.get_shamt()
             func = '100001'
             rd = sra(nd, nt, shamt)
@@ -601,7 +605,7 @@ for line in fp:
             op = '000000'
             rs = '00111'
             nd = R.get_nd()
-            nt = R.get_ns()
+            nt = R.get_ns(opt)
             shamt = R.get_shamt()
             func = '101100'
             rd = sra(nd, nt, shamt)
@@ -613,7 +617,9 @@ for line in fp:
             print("--------------------------")
 
         
-             
+        
+##        print(opt)
+          
              
 print_opt_list()
 print(mem)
