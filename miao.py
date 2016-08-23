@@ -79,11 +79,15 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+                #open file
+        menubar = self.menuBar()
+        self.setWindowTitle('OpenFile')
+
         # Button
 
-        self.connect(self.actionOpen, QtCore.SIGNAL('triggered()'), self.openfile)
+        self.connect(self.actionOpen, QtCore.SIGNAL('triggered()'), self.show_open_file)
         self.connect(self.actionRun, QtCore.SIGNAL('triggered()'), self.run)
-
+        #self.connect(openFile, QtCore.SIGNAL('triggered()'), self.show_open_file)
     def openfile(self):
         file = open('file_in.txt', 'r')
         string = ""
@@ -91,9 +95,9 @@ class Ui_MainWindow(QtGui.QMainWindow):
             string += eachline
             print(string)
         self.textEdit.setText(string)
+        
     
-    def run(self):
-        self.textEdit_2.setText("233")
+
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow", None))
@@ -105,6 +109,14 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionOpen.setText(_translate("MainWindow", "Open", None))
         self.actionRun.setText(_translate("MainWindow", "Run", None))
         self.actionRead_Me.setText(_translate("MainWindow", "Read_Me", None))
+    def show_open_file(self):
+        filename = QtGui.QFileDialog.getOpenFileName(self, 'Open file',
+                    '/home')
+        fname = open(filename,encoding="utf-8")
+        data = fname.read()
+        self.textEdit.setText(data)
+    def run(self):
+        self.textEdit_2.setText("233")
 
 app = QtGui.QApplication(sys.argv)
 ui = Ui_MainWindow()

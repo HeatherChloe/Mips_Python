@@ -6,68 +6,18 @@ try:
 except:
     print("failed to import shutil")
     sys.exit(0)
+
+
 src_name = "file_in.txt"
 
-
 def main():
-    string_show = ""
-    print("begin")
-    ##############################################################
-    ##################do sth with file############################
-    ##############################################################
-    src_name = "file_in.txt"
-    file_in_path = os.path.abspath(src_name)
-    path = sys.path[0]
-    folder_name = 'edited_version'
-
-    no_name = path + '\\' + folder_name
-    if os.path.exists(no_name) == False:
-        os.mkdir(os.path.join(path, folder_name))
-
-    new_path = path + '\\edited_version'
-##    print(new_path)
-    shutil.copy(file_in_path, new_path)
-
-    #判断是否存在.tmp 存在就删
-    with_tmp_file = (new_path + '\\' + src_name+ '.tmp')
-
-    if os.path.exists(with_tmp_file) == True:
-        os.remove(with_tmp_file)
-
-    fore_name = new_path + '\\' + src_name
-    now_name = with_tmp_file
-    os.rename(fore_name, now_name)
-
-    ##############################################################
-    #################done sth with file###########################
-    ##############################################################
-
-
-    temp = 5
-    fp = None
-    while temp >0 :
-        try:
-            fp = open(now_name,'r+')
-        except:
-            temp -= 1
-        finally:
-            break
-    if fp == None:
-        sys.exit(0)
-
+               
     opt_list = []
     pc_list_read = []
     reg = [0]
     mem = {}
     shift_list_aye = []
-    ####################fore########################
-    ####################fore########################
-    ####################fore########################
-    #"mmmmm"
-    #"lllll"
-    #"11111"
-
-
+    
     def unsigned(num):
         unsigned_num = num & 0xffffffff
         return unsigned_num
@@ -310,7 +260,57 @@ def main():
         else:
             rd = rd.zfill(32)
         add_to_reg(nd, rd)
-        return rd
+        return rd            
+
+
+    string_show = ""
+    print("begin")
+    ##############################################################
+    ##################do sth with file############################
+    ##############################################################
+    src_name = "file_in.txt"
+    file_in_path = os.path.abspath(src_name)
+    path = sys.path[0]
+    folder_name = 'edited_version'
+
+    no_name = path + '\\' + folder_name
+    if os.path.exists(no_name) == False:
+        os.mkdir(os.path.join(path, folder_name))
+
+    new_path = path + '\\edited_version'
+##    print(new_path)
+    shutil.copy(file_in_path, new_path)
+
+    #判断是否存在.tmp 存在就删
+    with_tmp_file = (new_path + '\\' + src_name+ '.tmp')
+
+    if os.path.exists(with_tmp_file) == True:
+        os.remove(with_tmp_file)
+
+    fore_name = new_path + '\\' + src_name
+    now_name = with_tmp_file
+    os.rename(fore_name, now_name)
+
+    ##############################################################
+    #################done sth with file###########################
+    ##############################################################
+
+
+    fp = open(now_name,'r+')
+
+    if fp == None:
+        sys.exit(0)
+
+
+    ####################fore########################
+    ####################fore########################
+    ####################fore########################
+    #"mmmmm"
+    #"lllll"
+    #"11111"
+
+
+    
     ##def beq(nt, ns, imm16):
         
 
@@ -636,8 +636,7 @@ def main():
                         print(reg)
                         print("--------------------------")
 
-            
-                 
+  
                  
     print(mem)
     print(pc_list_read)

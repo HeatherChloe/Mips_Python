@@ -8,7 +8,8 @@
 
 import sys
 from PyQt4 import QtCore, QtGui
-import save
+from test import UI_
+import save 
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -33,56 +34,90 @@ class Ui_MainWindow(QtGui.QMainWindow):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
         MainWindow.resize(580, 484)
+
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
+
         self.textEdit = QtGui.QTextEdit(self.centralwidget)
         self.textEdit.setGeometry(QtCore.QRect(10, 30, 271, 391))
         self.textEdit.setObjectName(_fromUtf8("textEdit"))
         self.textEdit.setReadOnly(True)
+
+        
         self.textEdit_2 = QtGui.QTextEdit(self.centralwidget)
         self.textEdit_2.setGeometry(QtCore.QRect(293, 30, 271, 391))
         self.textEdit_2.setObjectName(_fromUtf8("textEdit_2"))
         self.textEdit_2.setReadOnly(True)
+        
         self.label = QtGui.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(10, 10, 54, 12))
         self.label.setObjectName(_fromUtf8("label"))
+        
         self.label_2 = QtGui.QLabel(self.centralwidget)
         self.label_2.setGeometry(QtCore.QRect(300, 10, 54, 12))
         self.label_2.setObjectName(_fromUtf8("label_2"))
+        
         MainWindow.setCentralWidget(self.centralwidget)
+
         self.menubar = QtGui.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 580, 23))
         self.menubar.setObjectName(_fromUtf8("menubar"))
+
         self.menuFile = QtGui.QMenu(self.menubar)
         self.menuFile.setObjectName(_fromUtf8("menuFile"))
+
         self.menuOption = QtGui.QMenu(self.menubar)
         self.menuOption.setObjectName(_fromUtf8("menuOption"))
+
         self.menuExtra = QtGui.QMenu(self.menubar)
         self.menuExtra.setObjectName(_fromUtf8("menuExtra"))
+
         MainWindow.setMenuBar(self.menubar)
+
         self.statusbar = QtGui.QStatusBar(MainWindow)
         self.statusbar.setObjectName(_fromUtf8("statusbar"))
+
         MainWindow.setStatusBar(self.statusbar)
+
         self.actionOpen = QtGui.QAction(MainWindow)
         self.actionOpen.setObjectName(_fromUtf8("actionOpen"))
+
         self.actionRun = QtGui.QAction(MainWindow)
         self.actionRun.setObjectName(_fromUtf8("actionRun"))
+
         self.actionRead_Me = QtGui.QAction(MainWindow)
         self.actionRead_Me.setObjectName(_fromUtf8("actionRead_Me"))
+
         self.menuFile.addAction(self.actionOpen)
         self.menuOption.addAction(self.actionRun)
         self.menuExtra.addAction(self.actionRead_Me)
+
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuOption.menuAction())
         self.menubar.addAction(self.menuExtra.menuAction())
 
         self.retranslateUi(MainWindow)
+
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+        #open file
+        openFile = QtGui.QAction(QtGui.QIcon('open.png'), 'Open', self)
+        openFile.setShortcut('Ctrl+O')
+        openFile.setStatusTip('Open new File')
+        self.connect(openFile, QtCore.SIGNAL('triggered()'), self.show_open_file)
+        menubar = self.menuBar()
+        fileMenu = menubar.addMenu('&File')
+        fileMenu.addAction(openFile)
+
+
+
+        self.setWindowTitle('OpenFile')
+        
 
         # Button
 
         self.connect(self.actionOpen, QtCore.SIGNAL('triggered()'), self.openfile)
-
+        # File
     def openfile(self):
         save.main()
 
@@ -96,6 +131,16 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionOpen.setText(_translate("MainWindow", "Open", None))
         self.actionRun.setText(_translate("MainWindow", "Run", None))
         self.actionRead_Me.setText(_translate("MainWindow", "Read_Me", None))
+
+
+    def show_open_file(self):
+
+        filename = QtGui.QFileDialog.getOpenFileName(self, 'Open file',
+                    '/home')
+        fname = open(filename)
+        data = fname.read()
+        self.textEdit.setText(data)
+
 
 app = QtGui.QApplication(sys.argv)
 ui = Ui_MainWindow()
