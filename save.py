@@ -9,9 +9,19 @@ except:
 
 
 src_name = "file_in.txt"
+rst_string = ""
 
-def main():
-               
+def print_mine(string):
+    print(string)
+    global rst_string
+    rst_string += str(string)
+    rst_string += "\n"
+    
+
+
+
+def main(filename):
+            
     opt_list = []
     pc_list_read = []
     reg = [0]
@@ -263,12 +273,10 @@ def main():
         return rd            
 
 
-    string_show = ""
-    print("begin")
     ##############################################################
     ##################do sth with file############################
     ##############################################################
-    src_name = "file_in.txt"
+    src_name = filename
     file_in_path = os.path.abspath(src_name)
     path = sys.path[0]
     folder_name = 'edited_version'
@@ -282,12 +290,12 @@ def main():
     shutil.copy(file_in_path, new_path)
 
     #判断是否存在.tmp 存在就删
-    with_tmp_file = (new_path + '\\' + src_name+ '.tmp')
+    with_tmp_file = (new_path + '\\' + os.path.basename(src_name)+ '.tmp')
 
     if os.path.exists(with_tmp_file) == True:
         os.remove(with_tmp_file)
 
-    fore_name = new_path + '\\' + src_name
+    fore_name = new_path + '\\' + os.path.basename(src_name)
     now_name = with_tmp_file
     os.rename(fore_name, now_name)
 
@@ -402,10 +410,10 @@ def main():
                     index = pc_list_read.index(pc)
 ##                    print(index)
                     opt = opt_list[index]
-                    print(pc)
-                    print(opt)
+                    print_mine(pc)
+                    print_mine(opt)
 ##                    print(pc_list_read.index(pc))
-                    print(pc_list_read)   
+                    print_mine(pc_list_read)
 
                     if opt[0] == 'beq':
                         op = '000010'
@@ -416,8 +424,8 @@ def main():
                         nt          = rmv(bin(int(nt))).zfill(5)
                         ns          = rmv(bin(int(ns))).zfill(5)
                         imm16 = '0000_0000_0000_0001'
-                        print("#32'b" + op + "_" + ns + "_" + nt + "_" + imm16)
-
+                        print_mine("#32'b" + op + "_" + ns + "_" + nt + "_" + imm16)
+                        
                         if rt == rs:
                             if opt[3] == 'shift':
                             
@@ -449,9 +457,9 @@ def main():
                         rt          = ori(nt, ns, imm16)
                         nt          = rmv(bin(int(nt))).zfill(5)
                         ns          = rmv(bin(int(ns))).zfill(5)
-                        print("#32'b" + op + "_" + ns + "_" + nt + "_" + '_'.join(ext[i:i + 4] for i in range(0, len(ext),4)))
-                        print(reg)
-                        print("--------------------------")
+                        print_mine("#32'b" + op + "_" + ns + "_" + nt + "_" + '_'.join(ext[i:i + 4] for i in range(0, len(ext),4)))
+                        print_mine(reg)
+                        print_mine("--------------------------")
 
 
                     if opt[0] == 'addiu':
@@ -467,9 +475,9 @@ def main():
                         nt          = rmv(bin(int(nt)))
                         ns          = rmv(bin(int(ns)))
                         #print(l)
-                        print("#32'b" + op + "_" + str(ns).zfill(5) + "_" + str(nt).zfill(5) + "_" + '_'.join(ext[i:i+4] for i in range(0, len(ext),4)))
-                        print(reg)
-                        print("--------------------------")
+                        print_mine("#32'b" + op + "_" + str(ns).zfill(5) + "_" + str(nt).zfill(5) + "_" + '_'.join(ext[i:i+4] for i in range(0, len(ext),4)))
+                        print_mine(reg)
+                        print_mine("--------------------------")
 
                           
 
@@ -486,10 +494,10 @@ def main():
                         ns = rmv(bin(int(ns)))
                         nt = rmv(bin(int(nt)))
                         nd = rmv(bin(int(nd)))
-                        print("#32'b" + op +'_'+ str(ns).zfill(5) + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5)+ '_' + shamt + '_' +func)
+                        print_mine("#32'b" + op +'_'+ str(ns).zfill(5) + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5)+ '_' + shamt + '_' +func)
             ##            print("after_add")
-                        print(reg)
-                        print("--------------------------")
+                        print_mine(reg)
+                        print_mine("--------------------------")
 
 
                     if opt[0] == 'sub':
@@ -505,9 +513,9 @@ def main():
                         ns    = rmv(bin(int(ns)))
                         nt    = rmv(bin(int(nt)))
                         nd    = rmv(bin(int(nd)))
-                        print("#32'b" + op +'_'+ str(ns).zfill(5) + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5)+ '_' + shamt + '_' +func)
-                        print(reg)
-                        print("--------------------------")
+                        print_mine("#32'b" + op +'_'+ str(ns).zfill(5) + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5)+ '_' + shamt + '_' +func)
+                        print_mine(reg)
+                        print_mine("--------------------------")
 
 
                     if opt[0] == 'subu':
@@ -523,9 +531,9 @@ def main():
                         ns    = rmv(bin(int(ns)))
                         nt    = rmv(bin(int(nt)))
                         nd    = rmv(bin(int(nd)))
-                        print("#32'b" + op +'_'+ str(ns).zfill(5) + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5)+ '_' + shamt + '_' +func)
-                        print(reg)
-                        print("--------------------------")
+                        print_mine("#32'b" + op +'_'+ str(ns).zfill(5) + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5)+ '_' + shamt + '_' +func)
+                        print_mine(reg)
+                        print_mine("--------------------------")
 
 
                     if opt[0] == 'slt':
@@ -539,9 +547,9 @@ def main():
                         ns    = rmv(bin(int(ns)))
                         nt    = rmv(bin(int(nt)))
                         nd    = rmv(bin(int(nd)))
-                        print("#32'b" + op +'_'+ str(ns).zfill(5) + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5)+ '_' + shamt + '_' +func)
-                        print(reg)
-                        print("--------------------------")
+                        print_mine("#32'b" + op +'_'+ str(ns).zfill(5) + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5)+ '_' + shamt + '_' +func)
+                        print_mine(reg)
+                        print_mine("--------------------------")
 
 
                     if opt[0] == 'sltu':
@@ -555,9 +563,9 @@ def main():
                         ns    = rmv(bin(int(ns)))
                         nt    = rmv(bin(int(nt)))
                         nd    = rmv(bin(int(nd)))
-                        print("#32'b" + op +'_'+ str(ns).zfill(5) + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5)+ '_' + shamt + '_' +func)
-                        print(reg)
-                        print("--------------------------")
+                        print_mine("#32'b" + op +'_'+ str(ns).zfill(5) + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5)+ '_' + shamt + '_' +func)
+                        print_mine(reg)
+                        print_mine("--------------------------")
 
 
                     if opt[0] == 'sw':
@@ -570,9 +578,9 @@ def main():
                         #init_nd(nt)
                         nt          = rmv(bin(int(nt)))
                         ns          = rmv(bin(int(ns)))
-                        print("#32'b" + op + "_" + str(ns).zfill(5) + "_" + str(nt).zfill(5) + "_" + '_'.join(ext[i:i+4] for i in range(0, len(ext),4)))
-                        print(reg)
-                        print("--------------------------")
+                        print_mine("#32'b" + op + "_" + str(ns).zfill(5) + "_" + str(nt).zfill(5) + "_" + '_'.join(ext[i:i+4] for i in range(0, len(ext),4)))
+                        print_mine(reg)
+                        print_mine("--------------------------")
 
                         
                     if opt[0] == 'lw':
@@ -586,9 +594,9 @@ def main():
                         nt          = rmv(bin(int(nt)))
                         ns          = rmv(bin(int(ns)))
                         #print(l)
-                        print("#32'b" + op + "_" + str(ns).zfill(5) + "_" + str(nt).zfill(5) + "_" + '_'.join(ext[i:i+4] for i in range(0, len(ext),4)))
-                        print(reg)
-                        print("--------------------------")
+                        print_mine("#32'b" + op + "_" + str(ns).zfill(5) + "_" + str(nt).zfill(5) + "_" + '_'.join(ext[i:i+4] for i in range(0, len(ext),4)))
+                        print_mine(reg)
+                        print_mine("--------------------------")
 
 
                     if opt[0] == 'sll':
@@ -602,9 +610,9 @@ def main():
                         nd          = rmv(bin(int(nd)))
                         nt          = rmv(bin(int(nt)))
                         shamt       = rmv(bin(shamt).zfill(5))
-                        print("#32'b" + op +'_'+ rs + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5)+ '_' + str(shamt) + '_' +func)
-                        print(reg)
-                        print("--------------------------")
+                        print_mine("#32'b" + op +'_'+ rs + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5)+ '_' + str(shamt) + '_' +func)
+                        print_mine(reg)
+                        print_mine("--------------------------")
 
                     if opt[0] == 'srl':
                         op = '000000'
@@ -617,10 +625,10 @@ def main():
                         nd          = rmv(bin(int(nd)))
                         nt          = rmv(bin(int(nt)))
                         shamt       = rmv(bin(shamt).zfill(5))
-                        print("#32'b" + op +'_'+ rs + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5)+ '_' + str(shamt) + '_' +func)
-                        print(reg)
-                        print("--------------------------")
-                    
+                        print_mine("#32'b" + op +'_'+ rs + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5)+ '_' + str(shamt) + '_' +func)
+                        print_mine(reg)
+                        print_mine("--------------------------")
+                                            
                     if opt[0] == 'sra':
                         op = '000000'
                         rs = '00111'
@@ -632,21 +640,22 @@ def main():
                         nd          = rmv(bin(int(nd)))
                         nt          = rmv(bin(int(nt)))
                         shamt       = rmv(bin(shamt).zfill(5))
-                        print("#32'b" + op +'_'+ rs + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5)+ '_' + str(shamt) + '_' +func)
-                        print(reg)
-                        print("--------------------------")
+                        print_mine("#32'b" + op +'_'+ rs + '_' + str(nt).zfill(5) + '_' + str(nd).zfill(5)+ '_' + str(shamt) + '_' +func)
+                        print_mine(reg)
+                        print_mine("--------------------------")
 
-  
-                 
-    print(mem)
-    print(pc_list_read)
+                                          
+                                                         
+                        print_mine(mem)
+                        print_mine(pc_list_read)
     for i in opt_list:
-        print('-------------'+ str(pc_list_read[opt_list.index(i)]) + '--------------')
-        print(i)
+        print_mine('-------------'+ str(pc_list_read[opt_list.index(i)]) + '--------------')
+        print_mine(i)
 
                     
-    print(shift_list_aye)
+    print_mine(shift_list_aye)
     fp.close()
+    return rst_string
 
-if __name__ == "__main__":
-    main()
+##if __name__ == "__main__":
+##    main()

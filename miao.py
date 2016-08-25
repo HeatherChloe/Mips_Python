@@ -24,6 +24,7 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
+
 class Ui_MainWindow(QtGui.QMainWindow):
     def __init__(self):
         super(Ui_MainWindow, self).__init__()
@@ -31,6 +32,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
 
     
     def setupUi(self, MainWindow):
+        self.filename = ""
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
         MainWindow.resize(800, 500)
         self.centralwidget = QtGui.QWidget(MainWindow)
@@ -64,8 +66,10 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.statusbar.setObjectName(_fromUtf8("statusbar"))
         MainWindow.setStatusBar(self.statusbar)
         self.actionOpen = QtGui.QAction(MainWindow)
+        self.actionOpen.setShortcut('Ctrl+O')
         self.actionOpen.setObjectName(_fromUtf8("actionOpen"))
         self.actionRun = QtGui.QAction(MainWindow)
+        self.actionRun.setShortcut('F5')
         self.actionRun.setObjectName(_fromUtf8("actionRun"))
         self.actionRead_Me = QtGui.QAction(MainWindow)
         self.actionRead_Me.setObjectName(_fromUtf8("actionRead_Me"))
@@ -87,15 +91,17 @@ class Ui_MainWindow(QtGui.QMainWindow):
 
         self.connect(self.actionOpen, QtCore.SIGNAL('triggered()'), self.show_open_file)
         self.connect(self.actionRun, QtCore.SIGNAL('triggered()'), self.run)
+        self.connect(self.actionRead_Me, QtCore.SIGNAL('triggered()'), self.readme)
+
         #self.connect(openFile, QtCore.SIGNAL('triggered()'), self.show_open_file)
-    def openfile(self):
-        file = open('file_in.txt', 'r')
-        string = ""
-        for eachline in file:
-            string += eachline
-            print(string)
-        self.textEdit.setText(string)
-        
+##    def openfile(self):
+##        file = open('file_in.txt', 'r')
+##        string = ""
+##        for eachline in file:
+##            string += eachline
+##            print(string)
+##        self.textEdit.setText(string)
+##        
     
 
 
@@ -109,14 +115,35 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionOpen.setText(_translate("MainWindow", "Open", None))
         self.actionRun.setText(_translate("MainWindow", "Run", None))
         self.actionRead_Me.setText(_translate("MainWindow", "Read_Me", None))
+        
     def show_open_file(self):
-        filename = QtGui.QFileDialog.getOpenFileName(self, 'Open file',
-                    '/home')
-        fname = open(filename,encoding="utf-8")
-        data = fname.read()
-        self.textEdit.setText(data)
+        try:
+            self.filename = QtGui.QFileDialog.getOpenFileName(self, 'Open file',
+                        '/home')
+            fname = open(self.filename,encoding="utf-8")
+            data = fname.read()
+            self.textEdit.setText(data)
+        except UnicodeDecodeError:
+            reply = QtGui.QMessageBox.question(self, 'Warning',
+            "Error: Please use utf-8 encoding to input file!")
+
+
+
     def run(self):
-        self.textEdit_2.setText("233")
+        if self.filename == "":
+            QtGui.QMessageBox.question(self, 'Warning', 'Error: Open file first!')
+            return 
+        self.textEdit_2.setText(save.main(self.filename))
+
+    def readme(self):
+        #tips = "爱用用 不用滚 反正我这个没毛病"
+        tips = "本程序不会出bug!"
+        reply = QtGui.QMessageBox.question(self, 'Warning', tips, QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
+
+        if reply == QtGui.QMessageBox.No:
+            sys.exit(10086)
+
+
 
 app = QtGui.QApplication(sys.argv)
 ui = Ui_MainWindow()
